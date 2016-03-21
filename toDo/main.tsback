@@ -1,0 +1,58 @@
+interface IPerson {
+  name: string;
+  email: string;
+}
+
+interface ITask {
+  description: string;
+  done: boolean;
+  priority: string;
+  markDone(): void;
+}
+
+class Task implements ITask {
+  done = false;
+  constructor(public description: string, public priority: string, public assignedTo?: IPerson) {}
+  markDone() {
+    this.done = true;
+  }
+}
+var person: IPerson = {name: "Josh", email: "josh@josh.josh"}
+class HomeTask extends Task {
+  constructor(description: string) {
+    super(description, "Low", {name: "Josh", email: "josh@josh.josh"});
+  }
+}
+
+class HobbyTask extends Task {
+  constructor(description: string) {
+    super(description, "Low");
+  }
+}
+
+class WorkTask extends Task {
+  constructor(public dueDate: Date, description: string, priority: string = "Low", public assignedTo: IPerson) {
+    super(description, priority);
+  }
+}
+
+var tasks = [];
+tasks.push(new HomeTask("Do the dishes."));
+tasks.push(new HomeTask("Buy chocolate."));
+tasks.push(new HomeTask("Wash the laundry."));
+
+
+tasks.push(new HobbyTask("Practice origami."));
+tasks.push(new HobbyTask("Bake a pie."));
+
+var today = new Date();
+var tomorrow = new Date();
+tomorrow.setDate(today.getDate() + 1);
+var nextDay = new Date();
+nextDay.setDate(today.getDate() + 2);
+
+tasks.push(new WorkTask(today, "Update blog.", "High", person));
+tasks.push(new WorkTask(tomorrow, "Go to meeting.", "Medium", person));
+tasks.push(new WorkTask(nextDay, "Clean ceiling.", "Low", person));
+
+console.log(tasks);

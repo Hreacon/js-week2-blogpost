@@ -46,12 +46,12 @@ var fs = require('fs');
 // Start TypeScript Section
 
 // clean task
-gulp.task('tsClean', funciton() {
+gulp.task('tsClean', function() {
   return del(['app/*.js', 'app/*.js.map']);
 });
 
 // clean then compile once. To be called from server and global build
-gulp.task('ts', ['tsClean'], shell.task(['tsc']));
+gulp.task('ts', ['tsClean'], shell.task(['tsc --out build/js/app.js app/*.ts']));
 
 // End TypeScript Section
 // Start Bower Section
@@ -104,10 +104,10 @@ gulp.task('serve', function() {
       index: "index.html"
     }
   });
-  gulp.watch(['resources/js/*.js'], ['jsBuild']); // vanilla js changes, reload
+  gulp.watch(['app/*.ts'], ['tsBuild']); // vanilla js changes, reload
   gulp.watch(['bower.json'], ['bowerBuild']);
   gulp.watch(['*.html'], ['htmlBuild']); // html changes, reload
-  gulp.watch("scss/*scss", ['cssBuild']);
+  gulp.watch(["resources/styles/*.css", "resources/styles/*.scss"], ['scssBuild']);
   gulp.watch("message.txt", ['gitCommit']);
   gulp.watch(["*"], ["gitStatus"]);
 });
@@ -118,6 +118,7 @@ gulp.task('jsBuild', function() {
 });
 
 gulp.task('tsBuild', ['ts'], function() {
+  gulp.start('ts');
   browserSync.reload();
 });
 
@@ -134,7 +135,7 @@ gulp.task('bowerBuild', ['bower'], function() {
 // End Server Section
 // Global Build task
 
-gulp.task("build", ['ts'], function(){
+gulp.task("build", function(){
   /* Deprecated
   if (buildProduction) {
     gulp.start('minifyScripts');
@@ -208,3 +209,4 @@ gulp.task('jshint', function(){
   .pipe(jshint.reporter('default'))
   .pipe(jshint.reporter('fail'));
 });
+/**/
